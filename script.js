@@ -1,10 +1,34 @@
+// Event listener setup on DOM content loaded
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('submit-btn').addEventListener('click', showResult);
     document.getElementById('ok-btn').addEventListener('click', closePopup);
     document.getElementById('sunnah-btn').addEventListener('click', () => window.location.href = 'sun.html');
     document.getElementById('fatwa-btn').addEventListener('click', () => window.location.href = 'fat.html');
+
+    // Register service worker for caching and updates
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(function(error) {
+            console.log('Service Worker registration failed:', error);
+        });
+    }
+
+    // Check for updates and force reload if necessary
+    fetch('/version.json')
+        .then(response => response.json())
+        .then(serverVersion => {
+            const currentVersion = localStorage.getItem('appVersion');
+            if (currentVersion !== serverVersion.version) {
+                localStorage.setItem('appVersion', serverVersion.version);
+                window.location.reload(true); // Force reload to fetch the latest version
+            }
+        });
 });
 
+// Function to show results in a popup
 function showResult() {
     const dobInput = document.getElementById('dob').value;
     const gender = document.getElementById('gender').value;
@@ -42,10 +66,12 @@ function showResult() {
     };
 }
 
+// Function to close the popup
 function closePopup() {
     document.getElementById('result-popup').style.display = 'none';
 }
 
+// Function to format the date into a readable string
 function formatDate(date) {
     const day = date.getDate();
     const month = date.getMonth();
@@ -59,13 +85,15 @@ function formatDate(date) {
     return `${dayWithSuffix} ${monthNames[month]} ${year}`;
 }
 
+// Function to get the day of the week
 function getDayOfWeek(date) {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return days[date.getDay()];
 }
 
+// Function to get the suffix for the day of the month
 function getDaySuffix(day) {
-    if (day > 3 && day < 21) return 'th';
+    if (day > 3 && day < 21) return 'th'; // catch 11th to 20th
     switch (day % 10) {
         case 1:  return 'st';
         case 2:  return 'nd';
