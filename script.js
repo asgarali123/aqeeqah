@@ -1,4 +1,9 @@
-document.getElementById('submit-btn').addEventListener('click', showResult);
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('submit-btn').addEventListener('click', showResult);
+    document.getElementById('ok-btn').addEventListener('click', closePopup);
+    document.getElementById('sunnah-btn').addEventListener('click', () => window.location.href = 'sun.html');
+    document.getElementById('fatwa-btn').addEventListener('click', () => window.location.href = 'fat.html');
+});
 
 function showResult() {
     const dobInput = document.getElementById('dob').value;
@@ -30,19 +35,41 @@ function showResult() {
     const popup = document.getElementById('result-popup');
     popup.style.display = 'block';
 
-    document.querySelector('.close').onclick = function() {
-        popup.style.display = 'none';
+    window.onclick = function(event) {
+        if (event.target == popup) {
+            closePopup();
+        }
     };
 }
 
+function closePopup() {
+    document.getElementById('result-popup').style.display = 'none';
+}
+
 function formatDate(date) {
-    const day = ('0' + date.getDate()).slice(-2);
-    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = date.getDate();
+    const month = date.getMonth();
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    
+    const monthNames = [
+        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    ];
+
+    const dayWithSuffix = day + getDaySuffix(day);
+    return `${dayWithSuffix} ${monthNames[month]} ${year}`;
 }
 
 function getDayOfWeek(date) {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return days[date.getDay()];
+}
+
+function getDaySuffix(day) {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+        case 1:  return 'st';
+        case 2:  return 'nd';
+        case 3:  return 'rd';
+        default: return 'th';
+    }
 }
