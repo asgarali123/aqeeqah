@@ -86,12 +86,13 @@ body.calculator-page .popup {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(34, 34, 34, 0.9);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    background-color: rgb(141, 141, 141);
+    box-shadow: 0 0 15px rgba(0, 255, 55, 0.719);
     border-radius: 10px;
     z-index: 1000;
     max-width: 400px;
     width: 90%;
+    font:bold;
 }
 
 body.calculator-page .popup-content {
@@ -110,7 +111,7 @@ body.calculator-page .popup-content .close {
 
 body.calculator-page .btn-custom {
     background-color: #08fffb;
-    color: #000;
+    color: #000000;
     border: none;
     padding: 10px 20px;
     margin: 5px;
